@@ -1,3 +1,5 @@
 from django.contrib import admin
+from wybory.models import Województwo, RodzajGminy, Gmina, Kandydat, Rapor
 
-# Register your models here.
+@admin.register(Województwo, RodzajGminy, Gmina, Kandydat, Rapor)
+class Model(admin.ModelAdmin): pass
