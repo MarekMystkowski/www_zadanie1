@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Wyniki wyborów.</title>
+    {% load staticfiles %}
+</head>
+<body>
+    <div id="page">
+        <div id="top">
+            <div id="top_content">
+                <div id="pkw">
+                    <a href="http://pkw.gov.pl/" target="_blank">
+                        <img src="{% static "wybory/logo_pkw.jpg" %}" alt="PKW">
+                    </a>
+                </div>
+                <div id="tytul">
+                    <div>
+                        <h1>Wybory Prezydenta<span>Rzeczypospolitej Polskiej</span></h1>
+                    </div>
+                    <div>
+                        2005
+                    </div>
+                </div>
+                <div id="kbw">
+                    <a href="http://kbw.gov.pl/" target="_blank">
+                        <img src="{% static "wybory/logo_kbw.jpg" %}" alt="KBW">
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div id="tresc">
+            <div id="wyniki_ogolne">
+                <div id="wyniki_zbiorcze_statystyki">
+                    <h4>Zbiorcze statystyki głosowania</h4>
+                    <div>
+                        <div>Liczba mieszkańców</div>
+                        <div>{{ licz_miesz }}</div>
+                    </div>
+                    <div>
+                        <div>Liczba uprawnionych</div>
+                        <div>{{ licz_upraw }}</div>
+                    </div>
+                    <div>
+                        <div>Liczba wydanych kart</div>
+                        <div>{{ licz_wydan }}</div>
+                    </div>
+                    <div>
+                        <div>Liczba oddanych głosów</div>
+                        <div>{{ licz_oddan }}</div>
+                    </div>
+                    <div>
+                        <div>Liczba głosów ważnych</div>
+                        <div>{{ licz_wazny }}</div>
+                    </div>
+                </div>
+                <div id="wyniki_ogolne">
+                    <div id="frekwencja">
+                        <h4 style="text-align:center;">Frekwencja w Polsce</h4>
+                        <div  style="color:#042781;"> {{ frekwencja }} </div>
+                    </div>
+                    <div id="wyniki_wyborow_tabela">
+                        <table>
+                            <tr>
+                                <td>Imie i nazwisko</td>
+                                <td>Liczba głosów</td>
+                                <td>Wynik wyborczy (%)</td>
+                            </tr>
+                            <tr>
+                                <td>{{ kand_pierw }}</td>
+                                <td>{{ licz_na_pi }}</td>
+                                <td>
+                                    <table><tr>
+                                        <td>{{ proc_na_pi }}</td>
+                                        <td class="notrwd2">
+                                            <div><div style="width:{{ proc_na_pi }}; background-color:#f47b4e;"></div></div>
+                                        </td>
+                                    </tr></table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>{{ kand_drugi }}</td>
+                                <td>{{ licz_na_dr }}</td>
+                                <td>
+                                    <table><tr>
+                                        <td>{{ proc_na_dr }}</td>
+                                        <td class="notrwd2">
+                                            <div>
+                                                <div style="width:{{ proc_na_dr }}; background-color:#602bf4;"></div>
+                                            </div>
+                                        </td>
+                                    </tr></table>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div id="mapa">
+
+                </div>
+            </div>
+            <div id="wyniki_tab_wojewodztwa">
+            </div>
+            <div id="wyniki_tab_pozostale">
+                <div id="po_kategorach">
+
+                </div>
+                <div id="po_rozmiarze">
+
+                </div>
+            </div>
+        </div>
+
+        <div id="stopka">
+
+        </div>
+
+    </div>
+
+</body>
+</html>
