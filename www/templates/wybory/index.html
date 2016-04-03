@@ -71,9 +71,9 @@
                                 <td>{{ licz_na_pi }}</td>
                                 <td>
                                     <table><tr>
-                                        <td>{{ proc_na_pi }}</td>
+                                        <td>{{ proc_na_pi }}%</td>
                                         <td class="notrwd2">
-                                            <div><div style="width:{{ proc_na_pi }}; background-color:#f47b4e;"></div></div>
+                                            <div><div style="width:{{ proc_na_pi }}%; background-color:#f47b4e;"></div></div>
                                         </td>
                                     </tr></table>
                                 </td>
@@ -83,10 +83,10 @@
                                 <td>{{ licz_na_dr }}</td>
                                 <td>
                                     <table><tr>
-                                        <td>{{ proc_na_dr }}</td>
+                                        <td>{{ proc_na_dr }}%</td>
                                         <td class="notrwd2">
                                             <div>
-                                                <div style="width:{{ proc_na_dr }}; background-color:#602bf4;"></div>
+                                                <div style="width:{{ proc_na_dr }}%; background-color:#602bf4;"></div>
                                             </div>
                                         </td>
                                     </tr></table>
@@ -100,12 +100,117 @@
                 </div>
             </div>
             <div id="wyniki_tab_wojewodztwa">
+                <div>
+                    <h4>Porównanie wyników w poszczególnych województwach</h4>
+                </div>
+                <div>
+                    <table>
+                        <tr>
+                            <td>Województwo</td>
+                            <td>Liczba głosów ważnych</td>
+                            <td>{{ kand_pierw }}</td>
+                            <td></td>
+                            <td>Proporcje</td>
+                            <td>{{ kand_drugi }}</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td>Głosy</td>
+                            <td> % </td>
+                            <td></td>
+                            <td>Głosy</td>
+                            <td> % </td>
+                        </tr>
+
+                        {% for wojewodztwo in tabela_wejewodztw %}
+                            <tr>
+                                <td>{{ wojewodztwo.nazwa }}</td>
+                                <td>{{ wojewodztwo.licz_wazny }}</td>
+                                <td>{{ wojewodztwo.licz_na_pi }}</td><td>{{ wojewodztwo.proc_na_pi }}</td>
+                                <td>proporcja...</td>
+                                <td>{{ wojewodztwo.licz_na_dr }} </td><td> {{ wojewodztwo.proc_na_dr }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
             </div>
             <div id="wyniki_tab_pozostale">
-                <div id="po_kategorach">
+                <div id="po_kategorjach">
+                    <div>
+                    <h4>Porównanie wyników w poszczególnych kategorjach</h4>
+                    </div>
+                    <div>
+                        <table>
+                            <tr>
+                                <td>Podział</td>
+                                <td>Liczba głosów ważnych</td>
+                                <td>{{ kand_pierw }}</td>
+                                <td></td>
+                                <td>Proporcje</td>
+                                <td>{{ kand_drugi }}</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td>Głosy</td>
+                                <td> % </td>
+                                <td></td>
+                                <td>Głosy</td>
+                                <td> % </td>
+                            </tr>
+
+                            {% for iter in po_kategorjach %}
+                                <tr>
+                                    <td>{{ iter.nazwa }}</td>
+                                    <td>{{ iter.licz_wazny }}</td>
+                                    <td>{{ iter.licz_na_pi }}</td><td>{{ iter.proc_na_pi }}</td>
+                                    <td>proporcja...</td>
+                                    <td>{{ iter.licz_na_dr }} </td><td> {{ iter.proc_na_dr }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
 
                 </div>
                 <div id="po_rozmiarze">
+                    <div>
+                    <h4>Porównanie wyników w zależności od rozmiaru gminy</h4>
+                    </div>
+                    <div>
+                        <table>
+                            <tr>
+                                <td>Podział</td>
+                                <td>Liczba głosów ważnych</td>
+                                <td>{{ kand_pierw }}</td>
+                                <td></td>
+                                <td>Proporcje</td>
+                                <td>{{ kand_drugi }}</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td>Głosy</td>
+                                <td> % </td>
+                                <td></td>
+                                <td>Głosy</td>
+                                <td> % </td>
+                            </tr>
+
+                            {% for iter in po_rozmiarze %}
+                                <tr>
+                                    <td>{{ iter.nazwa }}</td>
+                                    <td>{{ iter.licz_wazny }}</td>
+                                    <td>{{ iter.licz_na_pi }}</td><td>{{ iter.proc_na_pi }}</td>
+                                    <td>proporcja...</td>
+                                    <td>{{ iter.licz_na_dr }} </td><td> {{ iter.proc_na_dr }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
 
                 </div>
             </div>
