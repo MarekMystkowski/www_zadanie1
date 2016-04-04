@@ -1,11 +1,26 @@
-from django.template import loader
-from django.http import HttpResponse
+from django.shortcuts import render
 from wybory.models import Kandydat, Rapor, Województwo, Gmina, RodzajGminy
 import functools;
 
 def index(request):
+
+    #dane do ustawienia ręcznego:
+
+    #przedziały jakie mają się pojawić w tabeli:
+    przedziały = [(0, 100), (101, 200), (201, 1000)]
+
+    #kolory do tabeli:
+    kolory= [('#e7deeb', '#fdeae2'), ('#d9cce0', '#fcded3'), ('#c6b2d1', '#fbcdbc'), ('#a180b2', '#f8ac90'), ('#8e67a3', '#f79c7a'),
+             ('#7b4d94', '#f58b64'), ('#693485', '#f47b4e'), ('#5a2079', '#f26a38'), ('#4d0e6e', '#f15a22'), ('#410360', '#f54200')]
+
+    #nazwa województwa a id na mapie
+    mapa_pola = {"Dolnośląskie":"land1", "Kujawsko-Pomorskie":"land2", "Łódzkie":"land3", "Małopolskie":"land6", "Podlaskie":"land10"}
+
+
+    #funkcje i klasy pomocnicze:
     def add2(a, b):
         return a[0] + b[0], a[1] + b[1]
+
     def add4(a, b):
         return a[0] + b[0], a[1] + b[1], a[2] + b[2], a[3] + b[3]
 
@@ -14,13 +29,6 @@ def index(request):
             return '0/0'
         else:
             return str(round(a / b * 100, 2))
-
-    liczba_mieszkańców, liczba_uprawnionych, liczba_wydanych_kart, liczba_głosów_oddanych =\
-        functools.reduce(add4,
-                            [(raport.liczba_mieszkańców, raport.liczba_uprawnionych, raport.liczba_wydanych_kart,
-                                raport.liczba_głosów_oddanych) for raport in Rapor.objects.all()],
-                            (0,0,0,0)
-                         )
 
     def glosy_na(*args, **kwargs):
         liczba_głosów_na_pierwszego = 0
@@ -42,20 +50,43 @@ def index(request):
             self.proc_na_pi = procrnt(na_pierwszego, self.licz_wazny)
             self.proc_na_dr = procrnt(na_drugiego, self.licz_wazny)
 
+
+    #dane ogólne do wypisania:
+    liczba_mieszkańców, liczba_uprawnionych, liczba_wydanych_kart, liczba_głosów_oddanych = \
+        functools.reduce(add4,
+                         [(raport.liczba_mieszkańców, raport.liczba_uprawnionych, raport.liczba_wydanych_kart,
+                           raport.liczba_głosów_oddanych) for raport in Rapor.objects.all()],
+                         (0, 0, 0, 0)
+                         )
+    licz_na_pi, licz_na_dr = glosy_na()
+
+
+    #tabela po województwach:
     tabela_wejewodztw = map(lambda t: SetDateToTabe(t[0], t[1][0], t[1][1]),
                          [(wojwództwo.nazwa, glosy_na(wojwództwo=wojwództwo)) for wojwództwo in Województwo.objects.all()]
                              )
+    tabela_wejewodztw2 = map(lambda t: SetDateToTabe(t[0], t[1][0], t[1][1]),
+                        [(wojwództwo.nazwa, glosy_na(wojwództwo=wojwództwo)) for wojwództwo in Województwo.objects.all()]
+                            )
+    tabela_wejewodztw3 = map(lambda t: SetDateToTabe(t[0], t[1][0], t[1][1]),
+                             [(wojwództwo.nazwa, glosy_na(wojwództwo=wojwództwo)) for wojwództwo in
+                              Województwo.objects.all()]
+                             )
 
+
+    #tabela po kategorjach:
     po_kategorjach = map(lambda t : SetDateToTabe(t[0],t[1][0],t[1][1]),
                          [(rodzaj.rodzaj, glosy_na(rodzaj=rodzaj))for rodzaj in RodzajGminy.objects.all()]
                          )
+
+
+    #tabela po rozmiarach:
     po_rozmiarze = functools.reduce(lambda ac, t: (ac[0] + t[0] + ', ', ac[1] + t[1][0], ac[2] + t[1][1]),
                                     [(rodzaj.rodzaj, glosy_na(rodzaj=rodzaj)) for rodzaj in RodzajGminy.objects.filter(z_województwem=False)],
                                      ('',0,0)
                                      )
     po_rozmiarze = [SetDateToTabe(po_rozmiarze[0][:-2], po_rozmiarze[1], po_rozmiarze[2])]
     if po_rozmiarze[0].nazwa == '': po_rozmiarze = []
-    przedziały = [(0,100), (101,200),(201, 1000)]
     for przedział in przedziały:
         a,b = functools.reduce( add2,
                         [(raport.liczba_głosów_na_pierwszego_kandydata, raport.liczba_głosów_na_drugiego_kandydata)for raport in
@@ -64,8 +95,39 @@ def index(request):
                         )
         po_rozmiarze.append(SetDateToTabe(str(przedział[0]) + ' - ' + str(przedział[1]),a,b))
 
-    licz_na_pi, licz_na_dr = glosy_na()
-    template = loader.get_template('wybory/index.html')
+
+    # mapa wraz z tabelką:
+    minimalny_procent = 50
+    for iter in tabela_wejewodztw2:
+        if iter.licz_wazny != 0:
+            minimalny_procent = min(minimalny_procent,
+                                    100 * min(iter.licz_na_pi, iter.licz_na_dr) / iter.licz_wazny)
+    if minimalny_procent == 50: minimalny_procent = 40
+    skok = (50 - minimalny_procent) / len(kolory)
+    tab_kolorow = []
+
+    class EleTabKol:
+        def __init__(self, przedzial, kolorA, kolorB):
+            self.przedzial, self.kolorA, self.kolorB = przedzial, kolorA, kolorB
+
+    class EleTabKolNaMap:
+        def __init__(self, land, kolor):
+            self.land, self.color,  = land, kolor
+
+    tmp = 50
+    for kolor in kolory:
+        tmp += skok
+        tab_kolorow.append(EleTabKol(procrnt(tmp, 100), kolor[0], kolor[1]))
+
+    kolory_na_mapie = []
+    for iter in tabela_wejewodztw3:
+        try:
+            if mapa_pola[iter.nazwa]:
+                kolory_na_mapie.append(EleTabKolNaMap(mapa_pola[iter.nazwa], tab_kolorow[4].kolorB))
+        except:pass
+
+
+
     context = {
         'kand_pierw': str(Kandydat.objects.all()[0]),
         'kand_drugi': str(Kandydat.objects.all()[1]),
@@ -82,5 +144,7 @@ def index(request):
         'tabela_wejewodztw' : tabela_wejewodztw,
         'po_kategorjach' : po_kategorjach,
         'po_rozmiarze' : po_rozmiarze,
+        'tab_kolorow' : tab_kolorow,
+        'kolory_na_mapie' : kolory_na_mapie
     }
-    return HttpResponse(template.render(context, request))
+    return render(request, 'wybory/index.html', context)

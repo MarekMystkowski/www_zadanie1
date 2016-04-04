@@ -1,0 +1,72 @@
+div#tytul_tresc {
+    color:#9d032a;
+    width:100%;
+}
+div#top {
+    width:100%;
+    background: url('../wybory/top.png') center top no-repeat;
+    background-size:100% auto;
+    position:relative;
+    padding:0 0 1% 0;
+}
+div#top_content {
+    width:100%;
+    padding:5% 1% 1% 1%;
+    position:absolute;
+    display:table;
+}
+div#top_content > div {
+    display:table-cell;
+    padding: 0 0 10% 10%;
+}
+
+div#tytul {
+    text-align: center;
+    padding: 3% 0 0 0;
+}
+
+div#tabela > div {
+    display: table-row;
+}
+
+div#tabela > div > div {
+    padding: 2% 5px 0;
+    display: table-cell;
+    text-align: center;
+    border:1px solid #eeeee6;
+}
+
+div#tabela > div:nth-child(1) {
+    background-color:  #eeeee6;
+}
+
+img#mapa {
+    width: 50%;
+}
+
+
+.mapbar {
+background: url(/static/wybory/barbkg.png) no-repeat 0px 0px;
+    float:left;
+    width: 100px;
+    height: 20px;
+    border: solid 1px #bdbdb5;
+    text-align: left;
+}
+
+.mapbar .bark1, .mapbar .bark2{
+    height: 20px;
+}
+
+.mapbar2 {
+background: url(/static/wybory/barbkg2.png) no-repeat 0px 0px;
+    float:left;
+    width: 100px;
+    height: 20px;
+    border: solid 1px #bdbdb5;
+    text-align: left;
+}
+
+.mapbar2 .bark1, .mapbar2 .bark2{
+    height: 20px;
+}
