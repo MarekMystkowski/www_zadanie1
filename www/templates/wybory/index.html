@@ -9,94 +9,36 @@
 <body>
     <div id="page">
         <div id="top">
-            <div id="top_content">
-                <div id="pkw">
-                    <div>
-                        <a href="http://pkw.gov.pl/" target="_blank">
-                            <img src="{% static "wybory/logo_pkw.png" %}" alt="PKW">
-                        </a>
-                    </div>
-                </div>
-                <div></div>
-                <div></div>
-                <div id="kbw">
-                    <div>
-                        <a href="http://kbw.gov.pl/" target="_blank">
-                            <img src="{% static "wybory/logo_kbw.png" %}" alt="KBW">
-                        </a>
-                    </div>
+            <div id="pkw">
+                <div>
+                    <a href="http://pkw.gov.pl/" target="_blank">
+                        <img src="{% static "wybory/logo_pkw.png" %}" alt="PKW">
+                    </a>
                 </div>
             </div>
-             <div id="tytul">
-                 <div id="tytul_tresc">
-                     <h1>Wybory Prezydenta</h1>
-                     <h2>Rzeczypospolitej Polskiej </h2>
-                     <h4>23 października 2005</h4>
-                 </div>
-             </div>
+            <div id="tytul">
+                <div>
+                    <h1>Wybory<br>Prezydenta</h1>
+                    <h2>Rzeczypospolitej<br>Polskiej </h2>
+                    <h4>23 października 2005</h4>
+                </div>
+            </div>
+            <div id="kbw">
+                <div>
+                    <a href="http://kbw.gov.pl/" target="_blank">
+                        <img src="{% static "wybory/logo_kbw.png" %}" alt="KBW">
+                    </a>
+                </div>
+            </div>
         </div>
-        <div id="tresc">
-            <div id="wyniki_ogolne">
-                <div id="tabela">
-                    <h4>Zbiorcze statystyki głosowania</h4>
-                    <div>
-                        <div>Liczba mieszkańców:</div>
-                        <div>{{ licz_miesz }}</div>
-                    </div>
-                    <div>
-                        <div>Liczba uprawnionych:</div>
-                        <div>{{ licz_upraw }}</div>
-                    </div>
-                    <div>
-                        <div>Liczba wydanych kart:</div>
-                        <div>{{ licz_wydan }}</div>
-                    </div>
-                    <div>
-                        <div>Liczba oddanych głosów:</div>
-                        <div>{{ licz_oddan }}</div>
-                    </div>
-                    <div>
-                        <div>Liczba głosów ważnych:</div>
-                        <div>{{ licz_wazny }}</div>
-                    </div>
-                </div>
-                <div id="wyniki_ogolne">
-                    <div id="frekwencja">
-                        <h4>Frekwencja w Polsce</h4>
-                        <div> <h5>{{ frekwencja }}</h5></div>
-                    </div>
-                    <div id="tabela">
-                        <div>
-                            <div>Imie i nazwisko</div>
-                            <div>Liczba głosów</div>
-                            <div></div>
-                            <div>Wynik wyborczy</div>
-                        </div>
-                        <div>
-                            <div>{{ kand_pierw }}</div>
-                            <div>{{ licz_na_pi }}</div>
-                            <div>{{ proc_na_pi }}%</div>
-                            <div>
-                                <div class="mapbar">
-                                    <img src="{% static "wybory/pasekA.png" %}" width="{{ proc_na_pi }}%" class="bark1">
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <div>{{ kand_drugi }}</div>
-                            <div>{{ licz_na_dr }}</div>
-                            <div>{{ proc_na_dr }}%</div>
-                            <div>
-                                <div class="mapbar">
-                                    <img src="{% static "wybory/pasekB.png" %}" width="{{ proc_na_dr }}%" class="bark2">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="mapa">
+
+
+        <div id="tresc" class="container">
+            <div id ="wyniki_ogolne" >
+                <div id="mapa" >
+                    <h4>Mapa Polski</h4>
                     <div id="mapa_svn">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="580px" width="620px" xmlns:amcharts="http://amcharts.com/ammap" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="406px" width="434px" xmlns:amcharts="http://amcharts.com/ammap" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
                     <defs>
                         <style type="text/css">
                             .land1, .land2, .land3, .land4, .land5, .land6, .land7, .land8,
@@ -119,7 +61,7 @@
                         </style>
                         <amcharts:ammap projection="mercator" leftLongitude="14.122232" topLatitude="54.834793" rightLongitude="24.149724" bottomLatitude="49.002699"></amcharts:ammap>
                     </defs>
-                            <g>
+                            <g  transform="scale(0.7)">
                                 <path id="PL-DS" title="Dolnośląskie" class="land1" d="M51.93,352.21L64.94,342.45L73.9,347.82L77.81,336.05L83.46,336.32L90.25,344.21L97.09,337.24L97.35,333.74L103.76,331.77L105.83,323.45L103.6,322.34L106.69,317.22L113.4,314.91L113.81,309.12L125.4,313.01L124.44,318.25L127.76,318.04L131.25,323.05L140.28,311.05L140.28,311.05L148.01,311.13L152.87,314.45L155.07,318.67L153.58,323.34L161.41,324.59L163.31,329.15L173.41,334.53L188.15,332.37L188.83,326.29L193.85,324.65L204.26,326.62L211.05,335.23L206.92,338.45L209.1,348.36L221.04,347.32L219.25,354.06L221.47,355.26L221.27,363.7L224.52,368.97L224.52,368.97L216.52,371.98L212.76,369.21L208.97,372.68L211.12,379.62L207.37,381.81L208.7,388.46L201.93,390.77L201.71,396.3L198.12,394.82L197.15,397.24L199.89,398.33L195.69,402.11L196.85,408.34L193.03,407.36L191.16,409.6L193.48,412.12L189.22,415.16L191.43,417.43L190.62,424.22L183,425.37L178.73,438.82L172.67,437.32L170.21,440.71L170.21,440.71L167.07,444.53L170.16,446.28L172.47,453.33L175.88,454.58L177.39,461.52L175.62,462.75L174.25,460.04L166.24,463.65L156.78,473.9L150.15,469.7L148.7,462.29L141.21,452.8L137.99,452.05L136.64,447.24L131.66,448.42L126.56,442.2L133.67,435.07L136.59,435.56L141.69,428.15L135.47,420.15L128.86,419.27L125.97,423.47L120.82,420.07L116.06,426.25L113.75,424.84L115.9,423.24L113.97,418.04L106.1,418.98L103.3,411.22L96.61,412.97L80.31,406.15L76.36,409.1L75.94,403.47L70.46,398.26L70.29,389.64L68.1,387.74L64,388.96L63.86,385.7L61.44,388.59L57.28,385.42L52.64,386.57L51.61,388.55L54.88,390.8L53.65,400.48L42.77,400.08L51.33,382.63L55.93,363.83z"/>
                                 <path id="PL-KP" title="Kujawsko-Pomorskie" class="land2" d="M199.53,139.83L201.36,130.26L206.82,126.21L207.67,129.85L212.75,128.66L216.65,131.3L215.73,128.36L219.65,128.17L220.97,119.22L229.94,117.1L227.99,111.95L233.29,112.47L236.87,115.87L241.11,109.79L246.97,113.85L253.07,113.81L252.82,118.18L264.79,119.71L268.25,117.86L270.4,122.93L276.54,118.8L283.59,118.33L281.77,124.16L283.61,128L291.97,129.09L291.8,130.91L297.28,128.99L306.5,130.19L306.5,130.19L309.92,131.72L314.39,148.4L316.29,149.77L321.42,147.28L325.1,152.36L329.03,151.59L330.46,155.3L339.59,154.53L342.29,162.19L339.81,165.98L342.97,166.72L344.22,174.33L344.22,174.33L336.55,178.45L339.89,187.61L339.29,194.22L331.64,190.74L332.99,193.78L330.02,196.21L324.9,195.22L329.03,203.76L326.54,203.55L323.63,208.4L329.67,215.01L329.8,219.44L324.65,217.65L325.23,222.74L320.2,227.51L323.41,230.05L317.38,237.16L321.79,238.91L317.09,245.26L313.94,245.28L315.44,250.26L315.44,250.26L310.56,253.49L311.19,255.73L309.96,254.03L300.57,256.7L300.57,256.7L292.97,249.99L292.39,253.35L282.75,256.67L278.41,247.19L268.61,240.2L260.36,243.07L259.12,235.81L252.6,241.92L249.15,241.73L248.66,239.55L242.33,238.08L242.52,234.72L235.95,235.66L236.43,232.19L231.95,231.34L229.1,225.72L224.02,224.11L222.64,226.43L222.23,224.13L217.07,229.75L214.19,218.93L207.56,222.61L204.38,221.75L205.34,217.03L200.29,214.23L200.62,211.31L206.4,210.99L207.3,196.93L194.11,190.09L197.15,176.55L199.54,175.35L196.32,174.04L195.32,167.87L200.83,166.61L202.31,162.52L196.27,154.45L191.88,154.72L190.69,151.26z"/>
                                 <path id="PL-LD" title="Łódzkie" class="land3" d="M315.44,250.26L319.38,254.98L328.9,255.68L338.53,263.88L350.4,261.63L352.96,258.46L357.66,263.59L360.84,262.37L364.1,265.68L365.87,274.34L375.71,278.65L374.95,283.36L371.52,286.09L376.12,290.65L373.5,295.2L377.77,295.12L378.24,297.54L385.05,294.66L389.66,299.91L393.36,300.1L396.58,307.41L392.77,307.74L394.34,314.59L398.94,316.82L398.95,319.64L396.64,323.52L387.23,319.34L382.61,323.12L387.36,333.19L386.29,338.41L391.29,337.52L391.82,339.7L384.93,353.46L384.93,353.46L381.45,357.44L381.37,364.62L374.59,362.49L373.43,367.82L359.15,367.99L358.04,379.46L362.71,380.92L360.92,390.15L351.47,381.84L348.57,388.91L349.45,394.22L343.61,400.76L343.61,400.76L339.04,401.85L338.67,398.85L333.81,396.34L328.23,398.32L323.07,387.18L319.38,388.25L317.47,383.06L313.58,384.34L311.3,388.71L294.69,377.71L290.53,381.76L277.31,382.27L277.31,382.27L272.31,379.42L270.16,373.96L266.58,378.72L265.09,375.94L246.46,370.58L246.46,370.58L247.93,361.15L243.65,361.72L241.79,352.97L249.06,349.3L248.39,344.41L256.6,346.78L259.95,341.27L258.3,323.2L261.83,318.7L263.47,307.05L267.41,303.84L268.17,306.07L278.7,307.04L284.94,296.35L280.88,292.6L280.06,283.03L287.17,283.62L288.04,280.92L293.31,280.79L293.36,269.18L303.16,269.23L303.84,263.3L299.58,262.75L300.57,256.7L300.57,256.7L309.96,254.03L311.19,255.73L310.56,253.49z"/>
@@ -137,6 +79,7 @@
                                 <path id="PL-WP" title="Wielkopolskie" class="land15" d="M169.13,122.7L172.56,134.31L175.68,133.72L175.66,137.02L181.49,134.45L190.36,135.32L199.53,139.83L199.53,139.83L190.69,151.26L191.88,154.72L196.27,154.45L202.31,162.52L200.83,166.61L195.32,167.87L196.32,174.04L199.54,175.35L197.15,176.55L194.11,190.09L207.3,196.93L206.4,210.99L200.62,211.31L200.29,214.23L205.34,217.03L204.38,221.75L207.56,222.61L214.19,218.93L217.07,229.75L222.23,224.13L222.64,226.43L224.02,224.11L229.1,225.72L231.95,231.34L236.43,232.19L235.95,235.66L242.52,234.72L242.33,238.08L248.66,239.55L249.15,241.73L252.6,241.92L259.12,235.81L260.36,243.07L268.61,240.2L278.41,247.19L282.75,256.67L292.39,253.35L292.97,249.99L300.57,256.7L300.57,256.7L299.58,262.75L303.84,263.3L303.16,269.23L293.36,269.18L293.31,280.79L288.04,280.92L287.17,283.62L280.06,283.03L280.88,292.6L284.94,296.35L278.7,307.04L268.17,306.07L267.41,303.84L263.47,307.05L261.83,318.7L258.3,323.2L259.95,341.27L256.6,346.78L248.39,344.41L249.06,349.3L241.79,352.97L243.65,361.72L247.93,361.15L246.46,370.58L246.46,370.58L229.74,377.42L225.77,375.91L227.62,370.53L224.52,368.97L224.52,368.97L221.27,363.7L221.47,355.26L219.25,354.06L221.04,347.32L209.1,348.36L206.92,338.45L211.05,335.23L204.26,326.62L193.85,324.65L188.83,326.29L188.15,332.37L173.41,334.53L163.31,329.15L161.41,324.59L153.58,323.34L155.07,318.67L152.87,314.45L148.01,311.13L140.28,311.05L140.28,311.05L138.07,304.5L132.61,299.9L129.61,299.1L126.86,302.61L120.79,300.25L123,297.13L122.12,290.45L115.71,292.3L112.06,287.46L113.36,282.63L109.83,283.3L105.56,278.82L108.84,251.03L103.29,246.25L108.56,245.22L101.48,229.05L102.57,218.9L111.24,216.88L110.6,209.69L108,208.56L113.09,204.03L112.26,185.59L112.26,185.59L121.71,188.98L133.79,185.44L139.45,171.59L145.8,171.07L148.73,165.19L153.5,167.27L152.92,161.82L157.83,157.78L143.63,149.81L141.96,141.32L154.26,140.25L158.68,136.64L160.57,126.32L164.88,124.12L166.05,125.97z"/>
                                 <path id="PL-ZP" title="Zachodniopomorskie" class="land16" d="M11.44,101.98l4.79,0.56l-2.96,4.56L9.72,102L11.44,101.98zM12.71,100.79l1.72,1.45l-2.8,-0.02L12.71,100.79zM7.71,95.29l1.81,-0.17l-2,2.57l5.6,9.49l-7.62,-6.1l-1.69,-4.76L7.71,95.29zM38.68,90.81l-3.27,1.79l0.43,-3.07L38.68,90.81zM39.3,85.29l-4.4,2.66l0.06,5.87l-6.51,14.04l-1.28,-5.2l-8.61,-1.35l0.56,-4l-8.95,4.52l-2.03,-3.81l1.73,-2.6l6.88,0.43l6.12,-4.69L39.3,85.29zM158.95,28.15l7.18,12.72l0.42,7.69l-2.7,0.69l3.55,8.57l-9.16,7.3l5.46,10.1l-0.73,14.09l3.01,-1.82l2.17,5.98l6.46,3.65l-0.81,3.42l-5.98,0.56l-0.03,3.76l4.44,3.3l-5.27,5.36l2.17,9.18l0,0l-3.08,3.27l-1.17,-1.85l-4.3,2.2l-1.9,10.33l-4.41,3.6l-12.31,1.07l1.68,8.48l14.19,7.97l-4.91,4.04l0.59,5.45l-4.77,-2.09l-2.94,5.88l-6.34,0.52l-5.66,13.86l-12.09,3.53l-9.45,-3.38l0,0l1.5,-6.34l-8.12,-1.94l-7.52,13.02l-2.41,-1.22l-2.64,2.23l-5.7,-3.19l-11.51,6.61l-4.55,-1.01l2.15,6.48l-14.94,6.38l-10.05,-5.1l-2.04,2.75l2.05,1.91l-3.88,1.21l0.78,3.01l-3.97,3.2l-3.25,11.53l-2.26,1.44l-4.71,-2.56l-2.02,5.36l0,0L5.82,208.26L0,206.08l2.31,-4.67l-1,-7.74l12.2,-9.21l1.97,-14.94l4.31,-6.45l-8.53,-28.75l-1.32,-20.47l7.48,6.54l5.85,1.22l5.74,7.4l1.33,-6.18l-2.96,-0.14l-1.95,-4.79l1.67,-6.2l3.01,-0.49l2.18,-13.12l4.41,-4.58l2.15,1.58l2.8,-10.88l-4.76,0.78l34.65,-12.91l49.02,-13.04l10.18,-8.13l15.9,-19.6L158.95,28.15z"/>
                             </g>
+
                         </svg>
                     </div>
                     <div id="mapa_tab_kolorów">
@@ -144,7 +87,7 @@
                             <div>
                                 {% for iter in tab_kolorow %}
                                     <div>
-                                        {{ iter.przedzial }}%
+                                       <font size="1"> {{ iter.przedzial }}%</font>
                                     </div>
                                 {% endfor %}
                             </div>
@@ -163,9 +106,75 @@
                         </div>
                     </div>
                 </div>
+                <div id="wyniki_ogolne_gura" >
+                    <div>
+                        <div id="tabela">
+                            <h4>Zbiorcze statystyki głosowania</h4>
+                            <div>
+                                <div>Liczba mieszkańców:</div>
+                                <div>{{ licz_miesz }}</div>
+                            </div>
+                            <div>
+                                <div>Liczba uprawnionych:</div>
+                                <div>{{ licz_upraw }}</div>
+                            </div>
+                            <div>
+                                <div>Liczba wydanych kart:</div>
+                                <div>{{ licz_wydan }}</div>
+                            </div>
+                            <div>
+                                <div>Liczba oddanych głosów:</div>
+                                <div>{{ licz_oddan }}</div>
+                            </div>
+                            <div>
+                                <div>Liczba głosów ważnych:</div>
+                                <div>{{ licz_wazny }}</div>
+                            </div>
+                        </div>
+                        <div id="frekwencja">
+                            <h4>Frekwencja w Polsce</h4>
+                            <div><h5 >{{ frekwencja }} %</h5></div>
+                            <div class="mapbar">
+                                <img src="{% static "wybory/pasekC.png" %}" width="{{ frekwencja }}%" class="bark1">
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div id="tabela">
+                            <h4>Wynik wyborów</h4>
+                            <div id = "magłówek_tabeli">
+                                <div>Imie i nazwisko</div>
+                                <div>Liczba głosów</div>
+                                <div></div>
+                                <div>Wynik wyborczy</div>
+                            </div>
+                            <div>
+                                <div>{{ kand_pierw }}</div>
+                                <div>{{ licz_na_pi }}</div>
+                                <div>{{ proc_na_pi }}%</div>
+                                <div>
+                                    <div class="mapbar">
+                                        <img src="{% static "wybory/pasekA.png" %}" width="{{ proc_na_pi }}%" class="bark1">
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <div>{{ kand_drugi }}</div>
+                                <div>{{ licz_na_dr }}</div>
+                                <div>{{ proc_na_dr }}%</div>
+                                <div>
+                                    <div class="mapbar">
+                                        <img src="{% static "wybory/pasekB.png" %}" width="{{ proc_na_dr }}%" class="bark2">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div id="wyniki_tab_wojewodztwa">
-                <h4>Porównanie wyników w poszczególnych województwach</h4>
+
+            <div id="wyniki_tab_wojewodztwa" class="centered-element">
+                <h3>Porównanie wyników w poszczególnych województwach</h3>
 
                 <div id="tabela">
                     <div>
@@ -195,8 +204,8 @@
                 </div>
             </div>
 
-            <div id="po_kategorjach">
-                <h4>Porównanie wyników w poszczególnych kategorjach</h4>
+            <div id="po_kategorjach" class="centered-element">
+                <h3>Porównanie wyników w poszczególnych kategorjach</h3>
                 <div id="tabela">
                     <div>
                         <div>Rodzaj gminy</div>
@@ -223,9 +232,10 @@
                         </div>
                     {% endfor %}
                 </div>
+            </div>
 
-            <div id="po_rozmiarze">
-                <h4>Porównanie wyników w zależnośći od rozmiaru gminy</h4>
+            <div id="po_rozmiarze" class="centered-element">
+            <h3>Porównanie wyników w zależnośći od rozmiaru gminy</h3>
                 <div id="tabela">
                     <div>
                         <div>Rozmiar</div>
@@ -254,9 +264,20 @@
                 </div>
             </div>
         </div>
+
         <div id="stopka">
-        </div>
+            <div>
+                <a href="http://www.pkw.gov.pl"><img src="{% static "wybory/logo_pkw_footer.png" %}" alt="" title="" /></a>
+            </div>
+            <div>
+                <a>Copyright © 2016</a>
+            </div>
+            <div>
+                <div><a>wykonanie:</a></div>
+                <div><a href="http://www.students.mimuw.edu.pl" target="_blank">Marek Mystkowski</a></div>
+            </div>
         </div>
     </div>
+
 </body>
 </html>
