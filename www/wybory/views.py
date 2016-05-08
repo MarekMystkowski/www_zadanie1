@@ -7,7 +7,7 @@ def index(request):
     #dane do ustawienia ręcznego:
 
     #przedziały jakie mają się pojawić w tabeli:
-    przedziały = [(0, 100), (101, 200), (201, 1000)]
+    przedziały = [(0, 5000), (5001, 10000), (10001, 20000), (20001, 50000), (50001, 100000), (100001, 200000), (200001, 500000), (500001,5000000)]
 
     #kolory do tabeli:
     kolor_dla_równych = "#f2f1f6"
