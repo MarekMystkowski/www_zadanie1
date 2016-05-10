@@ -28,23 +28,23 @@ div#page >div > div {
 }
 
 /* Ukłąd standardowej tabeli*/
-div#tabela > div {
+.tabela > div {
     display: table-row;
 }
 
-div#tabela > div > div {
+.tabela > div > div {
     padding: 1% 5px 0;
     display: table-cell;
     text-align: center;
     border:1px solid #eeeee6;
 }
 
-div#tabela > div:nth-child(1) {
+.tabela > div:nth-child(1) {
     background-color:  #eeeee6;
     font-weight:bold;
 }
 
-div#magłówek_tabeli {
+.magłówek_tabeli {
     background-color:  #eeeee6;
     font-weight:bold;
 }
@@ -109,37 +109,6 @@ div#wyniki_ogolne > div {
     display:table-cell;
     padding: 0px 5px 0;
 }
-
-
-/*
-.container {
-  position: absolute;
-}
-.centered-element_ {
-  width: 80%;
-  position: relative;
-    left: 20%;
-}
-
-div#mapa_ {
-    width: 40%;
-  position: relative;
-  left: 20%;
-  transform: translate(-30%);
-}
-
-div#mapa_tab_kolorów_ {
-    width: 100%;
-  position: relative;
-  left: 100%;
-  transform: translate(-80%);
-}
-div#wyniki_ogolne_gura_ {
-    width: 40%;
-  position: relative;
-  left: -10%;
-  transform: translate(+30%);
-} */
 
 
 /* Szegułowe ustalenia*/

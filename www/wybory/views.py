@@ -1,58 +1,68 @@
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponseRedirect, HttpResponse
 from wybory.models import Kandydat, Rapor, Województwo, Gmina, RodzajGminy
-import functools;
+import re, json, datetime, functools
+from django.contrib.auth.decorators import login_required
+
+
+# przedziały jakie mają się pojawić w tabeli:
+przedziały = [(0, 5000), (5001, 10000), (10001, 20000), (20001, 50000), (50001, 100000), (100001, 200000),
+              (200001, 500000), (500001, 5000000)]
+
+# kolory do tabeli:
+kolor_dla_równych = "#f2f1f6"
+kolory = [('#e7deeb', '#fdeae2'), ('#d9cce0', '#fcded3'), ('#c6b2d1', '#fbcdbc'), ('#a180b2', '#f8ac90'),
+          ('#8e67a3', '#f79c7a'),
+          ('#7b4d94', '#f58b64'), ('#693485', '#f47b4e'), ('#5a2079', '#f26a38'), ('#4d0e6e', '#f15a22'),
+          ('#410360', '#f54200')]
+
+# nazwa województwa a id na mapie
+mapa_pola = {"Dolnośląskie": "land1", "Kujawsko-Pomorskie": "land2", "Łódzkie": "land3", "Lubelskie": "land4",
+             "Lubuskie": "land5",
+             "Małopolskie": "land6", "Mazowieckie": "land7", "Opolskie": "land8", "Podkarpackie": "land9",
+             "Podlaskie": "land10",
+             "Pomorskie": "land11", "Śląskie": "land12", "Świętokrzyskie": "land13", "Warmińsko-Mazurskie": "land14",
+             "Wielkopolskie": "land15", "Zachodniopomorskie": "land16"}
+
+
+# funkcje i klasy pomocnicze:
+def add2(a, b):
+    return a[0] + b[0], a[1] + b[1]
+
+
+def add4(a, b):
+    return a[0] + b[0], a[1] + b[1], a[2] + b[2], a[3] + b[3]
+
+
+def procent(a, b):
+    if b == 0:
+        return '0/0'
+    else:
+        return str(round(a / b * 100, 2))
+
+
+def glosy_na(*args, **kwargs):
+    liczba_głosów_na_pierwszego = 0
+    liczba_głosów_na_drugiego = 0
+    for gmina in Gmina.objects.filter(*args, **kwargs):
+        raport = Rapor.objects.filter(gmina=gmina)
+        if len(raport) == 0:
+            pass
+        else:
+            raport = raport[0]
+            liczba_głosów_na_pierwszego += raport.liczba_głosów_na_pierwszego_kandydata
+            liczba_głosów_na_drugiego += raport.liczba_głosów_na_drugiego_kandydata
+    return (liczba_głosów_na_pierwszego, liczba_głosów_na_drugiego)
+
+
+class SetDateToTabe:
+    def __init__(self, nazwa, na_pierwszego, na_drugiego, id =''):
+        self.nazwa, self.licz_na_pi, self.licz_na_dr = nazwa, na_pierwszego, na_drugiego
+        self.licz_wazny = na_pierwszego + na_drugiego
+        self.proc_na_pi = procent(na_pierwszego, self.licz_wazny)
+        self.proc_na_dr = procent(na_drugiego, self.licz_wazny)
+        self.id = id
 
 def index(request):
-
-    #dane do ustawienia ręcznego:
-
-    #przedziały jakie mają się pojawić w tabeli:
-    przedziały = [(0, 5000), (5001, 10000), (10001, 20000), (20001, 50000), (50001, 100000), (100001, 200000), (200001, 500000), (500001,5000000)]
-
-    #kolory do tabeli:
-    kolor_dla_równych = "#f2f1f6"
-    kolory= [('#e7deeb', '#fdeae2'), ('#d9cce0', '#fcded3'), ('#c6b2d1', '#fbcdbc'), ('#a180b2', '#f8ac90'), ('#8e67a3', '#f79c7a'),
-             ('#7b4d94', '#f58b64'), ('#693485', '#f47b4e'), ('#5a2079', '#f26a38'), ('#4d0e6e', '#f15a22'), ('#410360', '#f54200')]
-
-    #nazwa województwa a id na mapie
-    mapa_pola = {"Dolnośląskie":"land1", "Kujawsko-Pomorskie":"land2", "Łódzkie":"land3", "Lubelskie":"land4", "Lubuskie":"land5",
-                 "Małopolskie":"land6", "Mazowieckie":"land7", "Opolskie":"land8", "Podkarpackie":"land9", "Podlaskie":"land10",
-                 "Pomorskie":"land11", "Śląskie":"land12", "Świętokrzyskie":"land13", "Warmińsko-Mazurskie":"land14",
-                 "Wielkopolskie":"land15", "Zachodniopomorskie":"land16"}
-
-    #funkcje i klasy pomocnicze:
-    def add2(a, b):
-        return a[0] + b[0], a[1] + b[1]
-
-    def add4(a, b):
-        return a[0] + b[0], a[1] + b[1], a[2] + b[2], a[3] + b[3]
-
-    def procent(a, b):
-        if b == 0:
-            return '0/0'
-        else:
-            return str(round(a / b * 100, 2))
-
-    def glosy_na(*args, **kwargs):
-        liczba_głosów_na_pierwszego = 0
-        liczba_głosów_na_drugiego = 0
-        for gmina in Gmina.objects.filter(*args, **kwargs):
-            raport = Rapor.objects.filter(gmina=gmina)
-            if len(raport) == 0:
-                pass
-            else:
-                raport = raport[0]
-                liczba_głosów_na_pierwszego += raport.liczba_głosów_na_pierwszego_kandydata
-                liczba_głosów_na_drugiego += raport.liczba_głosów_na_drugiego_kandydata
-        return (liczba_głosów_na_pierwszego, liczba_głosów_na_drugiego)
-
-    class SetDateToTabe:
-        def __init__(self, nazwa, na_pierwszego, na_drugiego):
-            self.nazwa, self.licz_na_pi, self.licz_na_dr = nazwa, na_pierwszego, na_drugiego
-            self.licz_wazny = na_pierwszego + na_drugiego
-            self.proc_na_pi = procent(na_pierwszego, self.licz_wazny)
-            self.proc_na_dr = procent(na_drugiego, self.licz_wazny)
-
 
     #dane ogólne do wypisania:
     liczba_mieszkańców, liczba_uprawnionych, liczba_wydanych_kart, liczba_głosów_oddanych = \
@@ -154,3 +164,70 @@ def index(request):
         'kolory_na_mapie' : kolory_na_mapie
     }
     return render(request, 'wybory/index.html', context)
+
+
+
+def load_gmin(request ) :
+    if request.method == 'GET':
+        kategoria = request.GET.get('kategoria')
+        wartos = request.GET.get('wartos')
+
+        gminy = []
+        pod_tytul = '...'
+        def select_gmin(*args, **kwargs):
+            for elem in map(lambda t: SetDateToTabe(t[0], t[1][0], t[1][1], t[2]),
+                            [(gmina.nazwa, glosy_na(id=gmina.id), gmina.id) for gmina in
+                             Gmina.objects.all().filter(*args, **kwargs)]
+                            ):
+                gminy.append(elem)
+
+        if kategoria == 'wojewodztwo':
+            select_gmin(wojwództwo = wartos)
+            pod_tytul = 'Gminy z województwa ' + wartos
+
+        if kategoria == 'kategoria':
+            select_gmin(rodzaj=wartos)
+            pod_tytul = 'Gminy rodzaju ' + wartos
+
+        if kategoria == 'rozmiar':
+            reg = re.compile(r"(\d+) - (\d+)")
+            mat = reg.match(wartos)
+            if mat == None:
+                pod_tytul = 'Wybrałes kategorię po rozmarze <\br> a to sa gminy których się nie dotyczy rozmiar'
+                for rodzaj in  RodzajGminy.objects.all().filter(z_województwem=False):
+                    select_gmin(rodzaj = rodzaj)
+            else:
+                od, do = mat.group(1) , mat.group(2)
+                pod_tytul = 'Gminy o zamieszkalności od ' + od + ' do ' + do + 'mieszkańców'
+                for raport in Rapor.objects.all().filter(liczba_mieszkańców__gte = int(od), liczba_mieszkańców__lte = int(do)):
+                    gminy.append(SetDateToTabe(raport.gmina.nazwa, raport.liczba_głosów_na_pierwszego_kandydata, raport.liczba_głosów_na_drugiego_kandydata, id = raport.gmina.id))
+
+        context = {
+            'gminy' : gminy,
+            'pod_tytul' : pod_tytul,
+            'kand_pierw': str(Kandydat.objects.all()[0]),
+            'kand_drugi': str(Kandydat.objects.all()[1]),
+            'czas_danych' : str(datetime.datetime.now()),
+
+            }
+        return render(request, 'wybory/load_gmin.html', context)
+
+    return HttpResponseRedirect("/")
+
+def save_data(request):
+    if request.method == 'GET':
+        gmina = Gmina.objects.all().filter(id = request.GET.get('id'))
+        na_pierwszego = int(request.GET.get('na_pierwszego'))
+        na_drugiego = int(request.GET.get('na_drugiego'))
+        # sprawdzanie czasu ...
+        raport = Rapor.objects.all().filter(gmina=gmina)
+        raport.update(liczba_głosów_na_pierwszego_kandydata = na_pierwszego, liczba_głosów_na_drugiego_kandydata = na_drugiego)
+
+        out = {
+            'sukces' : True,
+            'wazn' : na_pierwszego + na_drugiego,
+            'naPP' : procent(na_pierwszego, na_pierwszego + na_drugiego),
+            'naDP' : procent(na_drugiego, na_pierwszego + na_drugiego),
+        }
+        return HttpResponse(json.dumps(out))
+    return HttpResponseRedirect("/")

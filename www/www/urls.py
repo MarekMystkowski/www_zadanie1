@@ -16,10 +16,18 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from wybory import views
+from wybory.user.views import index as login
+from wybory.user.views import user_logout
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', views.index),
+    url(r'^login/$', login),
+    url(r'^logout/$', user_logout),
+
+    #ajax:
+    url(r'^load_gmin/$', views.load_gmin),
+    url(r'^save_data/$', views.save_data)
 ]
