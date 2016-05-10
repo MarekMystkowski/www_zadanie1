@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gminy</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'wybory/style_index.css' %}" />
+    <script src="{% static "wybory/clicked_table.js" %}" type="text/javascript"></script>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+</head>
+<body>
+
+    <div id="page">
+        <div id="naglowek">
+            <div id="tytul">
+                <h1>Gminy</h1>
+            </div>
+            <div id="panel_urzytkownika">
+                {% if user.is_authenticated %}
+                    <div id="zalogowany">
+                        <a href="logout"><img src="{% static "wyloguj.png" %}" alt="wyloguj"></a>
+                    </div>
+                {% else %}
+                    <div id="nie_zalogowany">
+                        <a href="login"><img src="{% static "zaloguj.png" %}" alt="zaloguj"></a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div id="dame" class="centered-element">
+            <h3>{{ pod_tytul }}</h3>
+            <div class="tabela">
+                <div>
+                    <div>gmina</div>
+                    <div>Liczba głosów ważnych</div>
+                    <div>{{ kand_pierw }}</div>
+                    <div></div>
+                    <div>Proporcje</div>
+                    <div></div>
+                    <div>{{ kand_drugi }}</div>
+                    {% if user.is_authenticated %}
+                        <dic></dic>
+                    {% endif %}
+                </div>
+               {% for iter in gminy %}
+                    <div>
+                        <div>{{ iter.nazwa }}</div>
+                        <div id="wazn_{{ iter.id }}">{{ iter.licz_wazny }}</div>
+                        {% if user.is_authenticated %}
+                            <div><input id="naPi_{{ iter.id }}" type="number" value="{{iter.licz_na_pi}}"></div>
+                        {% else %}
+                            <div id="naPi_{{ iter.id }}">{{ iter.licz_na_pi }}</div>
+                        {% endif %}
+                        <div id="naPP_{{ iter.id }}">{{ iter.proc_na_pi }}%</div>
+                        <div>
+                            <div class="mapbar2">
+                                <img id="naPa_{{ iter.id }}" src="{% static "wybory/pasekA.png" %}" width="{{ iter.proc_na_pi }}%" class="bark1">
+                            </div>
+                        </div>
+                        <div id="naDP_{{ iter.id }}">{{ iter.proc_na_dr }}%</div>
+                        {% if user.is_authenticated %}
+                            <div><input id="naDr_{{ iter.id }}" type="number" value="{{iter.licz_na_dr}}"></div>
+                            <dic> <button onclick="saveRow({{ iter.id }})">Zapisz</button> </dic>
+                            <input type="hidden" id="date_{{ iter.id }}" value="{{ czas_danych }}">
+                        {% else %}
+                            <div id="naDr_{{ iter.id }}">{{ iter.licz_na_dr }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
