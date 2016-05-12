@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from django.core.exceptions import ValidationError
+import datetime
+from django.utils import timezone
 
 class Województwo(models.Model):
     nazwa = models.CharField(max_length=50, primary_key=True)
@@ -64,6 +66,10 @@ class Rapor(models.Model):
     liczba_głosów_oddanych = models.IntegerField()
     liczba_głosów_na_pierwszego_kandydata = models.IntegerField(verbose_name= 'Liczba głosów na ' + __nazwa_kandydata(1))
     liczba_głosów_na_drugiego_kandydata = models.IntegerField(verbose_name= 'Liczba głosów na ' + __nazwa_kandydata(2))
+    data_modyfikacji = models.DateTimeField()
+    def save(self, *args, **kwargs):
+        self.data_modyfikacji = timezone.make_aware(datetime.datetime.now(), timezone.get_current_timezone())
+        super(Rapor, self).save(*args, **kwargs)
     class Meta:
         verbose_name_plural = 'raporty (wyniki głosowań z gmin)'
     def clean(self):

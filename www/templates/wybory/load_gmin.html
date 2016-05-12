@@ -32,23 +32,35 @@
             <div class="tabela">
                 <div>
                     <div>gmina</div>
-                    <div>Liczba głosów ważnych</div>
+                    <!--<div>Liczba głosów ważnych</div>-->
+                    <div>Liczba mieszkańców</div>
+                    <div>Liczba uprawinionych</div>
+                    <div>Liczba wydanych kart</div>
+                    <div>Liczba oddanych</div>
                     <div>{{ kand_pierw }}</div>
                     <div></div>
                     <div>Proporcje</div>
                     <div></div>
                     <div>{{ kand_drugi }}</div>
                     {% if user.is_authenticated %}
-                        <dic></dic>
+                        <div></div>
                     {% endif %}
                 </div>
                {% for iter in gminy %}
                     <div>
                         <div>{{ iter.nazwa }}</div>
-                        <div id="wazn_{{ iter.id }}">{{ iter.licz_wazny }}</div>
                         {% if user.is_authenticated %}
-                            <div><input id="naPi_{{ iter.id }}" type="number" value="{{iter.licz_na_pi}}"></div>
+                           <!-- <div><input id_="wazn_{{ iter.id }}"  type="number" value="{{ iter.licz_wazny }}"></div> -->
+                            <div><input id="miesz_{{ iter.id }}" type="number" value="{{ iter.licz_miesz }}"></div>
+                            <div><input id="upraw_{{ iter.id }}" type="number" value="{{ iter.licz_upraw }}"></div>
+                            <div><input id="wydan_{{ iter.id }}" type="number" value="{{ iter.licz_wydan }}"></div>
+                            <div><input id="oddan_{{ iter.id }}" type="number" value="{{ iter.licz_oddan }}"></div>
+                            <div><input id="naPi_{{ iter.id }}"   type="number" value="{{iter.licz_na_pi}}"></div>
                         {% else %}
+                            <div id="miesz_{{ iter.id }}">{{ iter.licz_miesz }}</div>
+                            <div id="upraw_{{ iter.id }}">{{ iter.licz_upraw }}</div>
+                            <div id="wydan_{{ iter.id }}">{{ iter.licz_wydan }}</div>
+                            <div id="oddan_{{ iter.id }}">{{ iter.licz_oddan }}</div>
                             <div id="naPi_{{ iter.id }}">{{ iter.licz_na_pi }}</div>
                         {% endif %}
                         <div id="naPP_{{ iter.id }}">{{ iter.proc_na_pi }}%</div>
@@ -60,7 +72,10 @@
                         <div id="naDP_{{ iter.id }}">{{ iter.proc_na_dr }}%</div>
                         {% if user.is_authenticated %}
                             <div><input id="naDr_{{ iter.id }}" type="number" value="{{iter.licz_na_dr}}"></div>
-                            <dic> <button onclick="saveRow({{ iter.id }})">Zapisz</button> </dic>
+                            <div>
+                                <button onclick="saveRow({{ iter.id }})">Zapisz</button>
+                                <div id="error_{{ iter.id }}" style="color:#ff1e1c"> </div>
+                            </div>
                             <input type="hidden" id="date_{{ iter.id }}" value="{{ czas_danych }}">
                         {% else %}
                             <div id="naDr_{{ iter.id }}">{{ iter.licz_na_dr }}</div>

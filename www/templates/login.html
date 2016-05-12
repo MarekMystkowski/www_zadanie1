@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Logowanie</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'wybory/style_index.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
+</head>
+<body>
+    <div id="top">
+            <div id="pkw">
+                <div>
+                    <a href="http://pkw.gov.pl/" target="_blank">
+                        <img src="{% static "wybory/logo_pkw.png" %}" alt="PKW">
+                    </a>
+                </div>
+            </div>
+            <div id="tytul">
+                <div>
+                    <h1>Wybory<br>Prezydenta</h1>
+                    <h2>Rzeczypospolitej<br>Polskiej </h2>
+                    <h4>23 października 2005</h4>
+                </div>
+            </div>
+            <div id="kbw">
+                <div>
+                    <a href="http://kbw.gov.pl/" target="_blank">
+                        <img src="{% static "wybory/logo_kbw.png" %}" alt="KBW">
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    <section id="content">
+        {% if error %}
+            <div class="error">
+                <div>{{ error }}</div>
+            </div>
+        {% endif %}
+
+        <article>
+            <h2>Logowanie</h2>
+            <form class="table" method="post" action="/login/">
+                {% csrf_token %}
+                <div class="tr">
+                    <div class="td right noborder">Login: </div>
+                    <div class="td left noborder"><input type="text" name="username" maxlength="30"></div>
+                </div>
+                <div class="tr">
+                    <div class="td right noborder">Hasło: </div>
+                    <div class="td left noborder"><input type="password" name="password" type="password" ></div>
+                </div>
+                <div class="tr">
+                    <div class="td noborder"></div>
+                    <div class="td left noborder">
+                        <input type="hidden" name="next" value="{{ next }}"/>
+                        <input type="submit" name="submit_login" value="Zaloguj" />
+                    </div>
+                </div>
+            </form>
+        </article>
+
+        <article>
+            <div class="register">
+                <h2>Rejestracja</h2>
+                <form class="table" method="post" action="/login/">
+                    {% csrf_token %}
+                    <div class="tr">
+                        <div class="td right noborder">Login: </div>
+                        <div class="td left noborder"><input class="id_username" maxlength="30" name="username" type="text"></div>
+                    </div>
+                    <div class="tr">
+                        <div class="td right noborder">E-mail:</div>
+                        <div class="td left noborder"><input class="id_email" maxlength="254" name="email" type="email"></div>
+                    </div>
+                    <div class="tr">
+                        <div class="td right noborder">Hasło:</div>
+                        <div class="td left noborder"><input class="id_password" name="password" type="password" ></div>
+                    </div>
+                    <div class="tr">
+                        <div class="td noborder"></div>
+                        <div class="td left noborder">
+                            <input type="hidden" name="next" value="{{ next }}"/>
+                            <input type="submit" name="submit_register" value="Zarejestruj" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </article>
+    </section>
+</body>
+</html>

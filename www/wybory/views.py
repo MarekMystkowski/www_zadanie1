@@ -1,3 +1,5 @@
+from datetime import timezone
+
 from django.shortcuts import render, HttpResponseRedirect, HttpResponse
 from wybory.models import Kandydat, Rapor, Województwo, Gmina, RodzajGminy
 import re, json, datetime, functools
@@ -55,12 +57,26 @@ def glosy_na(*args, **kwargs):
 
 
 class SetDateToTabe:
-    def __init__(self, nazwa, na_pierwszego, na_drugiego, id =''):
+    def __init__(self, nazwa, na_pierwszego, na_drugiego, id ='' ):
         self.nazwa, self.licz_na_pi, self.licz_na_dr = nazwa, na_pierwszego, na_drugiego
         self.licz_wazny = na_pierwszego + na_drugiego
         self.proc_na_pi = procent(na_pierwszego, self.licz_wazny)
         self.proc_na_dr = procent(na_drugiego, self.licz_wazny)
         self.id = id
+
+class SetDateWithRaportToTabe:
+    def __init__(self, raport ):
+        self.nazwa = str(raport.gmina)
+        self.licz_na_pi = raport.liczba_głosów_na_pierwszego_kandydata
+        self.licz_na_dr = raport.liczba_głosów_na_drugiego_kandydata
+        self.licz_wazny = self.licz_na_pi + self.licz_na_dr
+        self.proc_na_pi = procent(self.licz_na_pi, self.licz_wazny)
+        self.proc_na_dr = procent(self.licz_na_dr, self.licz_wazny)
+        self.id = raport.gmina.id
+        self.licz_miesz = raport.liczba_mieszkańców
+        self.licz_upraw = raport.liczba_uprawnionych
+        self.licz_wydan = raport.liczba_wydanych_kart
+        self.licz_oddan = raport.liczba_głosów_oddanych
 
 def index(request):
 
@@ -175,8 +191,8 @@ def load_gmin(request ) :
         gminy = []
         pod_tytul = '...'
         def select_gmin(*args, **kwargs):
-            for elem in map(lambda t: SetDateToTabe(t[0], t[1][0], t[1][1], t[2]),
-                            [(gmina.nazwa, glosy_na(id=gmina.id), gmina.id) for gmina in
+            for elem in map(lambda raport: SetDateWithRaportToTabe(raport),
+                            [(Rapor.objects.all().filter(gmina=gmina)[0]) for gmina in
                              Gmina.objects.all().filter(*args, **kwargs)]
                             ):
                 gminy.append(elem)
@@ -200,7 +216,7 @@ def load_gmin(request ) :
                 od, do = mat.group(1) , mat.group(2)
                 pod_tytul = 'Gminy o zamieszkalności od ' + od + ' do ' + do + 'mieszkańców'
                 for raport in Rapor.objects.all().filter(liczba_mieszkańców__gte = int(od), liczba_mieszkańców__lte = int(do)):
-                    gminy.append(SetDateToTabe(raport.gmina.nazwa, raport.liczba_głosów_na_pierwszego_kandydata, raport.liczba_głosów_na_drugiego_kandydata, id = raport.gmina.id))
+                    gminy.append(SetDateWithRaportToTabe(raport))
 
         context = {
             'gminy' : gminy,
@@ -219,15 +235,44 @@ def save_data(request):
         gmina = Gmina.objects.all().filter(id = request.GET.get('id'))
         na_pierwszego = int(request.GET.get('na_pierwszego'))
         na_drugiego = int(request.GET.get('na_drugiego'))
-        # sprawdzanie czasu ...
-        raport = Rapor.objects.all().filter(gmina=gmina)
-        raport.update(liczba_głosów_na_pierwszego_kandydata = na_pierwszego, liczba_głosów_na_drugiego_kandydata = na_drugiego)
+        odanych = int(request.GET.get("odanych"))
+        wydanych = int(request.GET.get("wydanych"))
+        uprawnionych = int(request.GET.get("uprawnionych"))
+        mieszkancow = int(request.GET.get("mieszkancow"))
+        date_str = request.GET.get("date")
 
+        sukces = True;
+        raport = Rapor.objects.all().filter(gmina=gmina)[0]
+        try:
+            date = datetime.datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S.%f') - datetime.timedelta(hours=2)
+
+        except ValueError:
+            date = datetime.datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S') - datetime.timedelta(hours=2)
+        if raport.data_modyfikacji.astimezone(datetime.timezone.utc).replace(tzinfo=None) < date:
+            raport.liczba_głosów_na_pierwszego_kandydata = na_pierwszego
+            raport.liczba_głosów_na_drugiego_kandydata = na_drugiego
+            raport.liczba_głosów_oddanych = odanych
+            raport.liczba_wydanych_kart = wydanych
+            raport.liczba_uprawnionych = uprawnionych
+            raport.liczba_mieszkańców = mieszkancow
+            raport.save()
+        else:
+            print ( "<")
+            sukces = False;
         out = {
-            'sukces' : True,
+            'sukces' : sukces,
             'wazn' : na_pierwszego + na_drugiego,
             'naPP' : procent(na_pierwszego, na_pierwszego + na_drugiego),
             'naDP' : procent(na_drugiego, na_pierwszego + na_drugiego),
+            'date' : str(datetime.datetime.now()),
+            'miesz': raport.liczba_mieszkańców,
+            'upraw': raport.liczba_uprawnionych,
+            'wydan': raport.liczba_wydanych_kart,
+            'oddan': raport.liczba_głosów_oddanych,
+            'miesz': raport.liczba_mieszkańców,
+            'naPi' : raport.liczba_głosów_na_pierwszego_kandydata,
+            'naDr' : raport.liczba_głosów_na_drugiego_kandydata
         }
+
         return HttpResponse(json.dumps(out))
     return HttpResponseRedirect("/")
