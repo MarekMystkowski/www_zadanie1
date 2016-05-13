@@ -1,0 +1,60 @@
+{% load staticfiles %}
+
+    <h4>Dane zostały zmienione o {{ datazmiany }} przez {{ zmieniajacy }}</h4>
+    <h5>{{ kol_gmina }}</h5>
+    <div class="tabela">
+        <div>
+            <div>wersja</div>
+            <div>Liczba mieszkańców</div>
+            <div>Liczba uprawinionych</div>
+            <div>Liczba wydanych kart</div>
+            <div>Liczba oddanych</div>
+            <div>{{ kand_pierw }}</div>
+            <div></div>
+            <div>Proporcje</div>
+            <div></div>
+            <div>{{ kand_drugi }}</div>
+            <div></div>
+        </div>
+        <div>
+            <div>moja</div>
+            <div>{{ str_mirsz }}</div>
+            <div>{{ str_upraw }}</div>
+            <div>{{ str_wydan }}</div>
+            <div>{{ str_oddan }}</div>
+            <div>{{ str_pierw }}</div>
+            <div>{{ str_pi_pr }}</div>
+            <div>
+                <div class="mapbar2">
+                    <img src="{% static "wybory/pasekA.png" %}" width="{{ str_pi_pr }}}%" class="bark1">
+                </div>
+            </div>
+            <div>{{ str_dr_pr }}</div>
+            <div>{{ str_drugi }}</div>
+            <div>
+               <button onclick="upDateMy({{ id_gmin }},{{ datazmiany }})">Nadpisz mojmi.</button>
+            </div>
+        </div>
+        <div>
+            <div>{{ zmieniajacy }}</div>
+            <div>{{ now_mirsz }}</div>
+            <div>{{ now_upraw }}</div>
+            <div>{{ now_wydan }}</div>
+            <div>{{ now_oddan }}</div>
+            <div>{{ now_pierw }}</div>
+            <div>{{ now_pi_pr }}</div>
+            <div>
+                <div class="mapbar2">
+                    <img src="{% static "wybory/pasekA.png" %}" width="{{ now_pi_pr }}%" class="bark1">
+                </div>
+            </div>
+            <div>{{ now_dr_pr }}</div>
+            <div>{{ now_drugi }}</div>
+            <div>
+                 <button onclick="upDate({{ id_gmin }}, {{ now_mirsz }}, {{ now_upraw }}, {{ now_wydan }}, {{ now_oddan }}, {{ now_pierw }}, {{ now_pi_pr }}, {{ now_drugi }}, {{ now_dr_pr }}, {{ datazmiany }})">Zakceptuj te dane.</button>
+             </div>
+        </div>
+    </div>
+
+
+

@@ -29,6 +29,7 @@
         </div>
         <div id="dame" class="centered-element">
             <h3>{{ pod_tytul }}</h3>
+            <div id="komunikat"></div>
             <div class="tabela">
                 <div>
                     <div>gmina</div>
@@ -73,7 +74,7 @@
                         {% if user.is_authenticated %}
                             <div><input id="naDr_{{ iter.id }}" type="number" value="{{iter.licz_na_dr}}"></div>
                             <div>
-                                <button onclick="saveRow({{ iter.id }})">Zapisz</button>
+                                <button id = "butt_{{ iter.id }}" onclick="saveRow({{ iter.id }})">Zapisz</button>
                                 <div id="error_{{ iter.id }}" style="color:#ff1e1c"> </div>
                             </div>
                             <input type="hidden" id="date_{{ iter.id }}" value="{{ czas_danych }}">

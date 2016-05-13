@@ -32,7 +32,7 @@ function saveRow(id_gmin) {
         blad_walidacji =  'Ujemna liczba glosow!'
     } else if (na_pierwszego + na_drugiego > odanych) {
         blad_walidacji = 'Suma glosow oddanych na kandydatow wieksza niz ilosc glosow oddanych.';
-    } else if (odanych < wydanych) {
+    } else if (odanych > wydanych) {
         blad_walidacji = 'Mniej wydanych kart niz oddanych glosow.';
     } else if (wydanych > uprawnionych) {
         blad_walidacji = 'Wydano wiecej kart niz uprawnionych.';
@@ -54,38 +54,37 @@ function saveRow(id_gmin) {
         data : {id : id_gmin, na_pierwszego : na_pierwszego, na_drugiego : na_drugiego, date : date, odanych : odanych, wydanych:wydanych, uprawnionych: uprawnionych, mieszkancow:mieszkancow},
         success : function(json) {
             var dane = JSON.parse(json);
-             $('#date_' + id_gmin).get(0).value = dane.date;
+            $('#date_' + id_gmin).get(0).value = dane.date;
             if(dane.sukces)
             {
                 $('#naPP_' + id_gmin).first().text(dane.naPP + "%");
                 $('#naPa_' + id_gmin).width(dane.naPP + "%") ;
                 $('#naDP_' + id_gmin).first().text(dane.naDP  + "%");
+                $('#date_' + id_gmin).get(0).value = dane.date;
             } else {
-
-                var OknoKomunikatu = window.open("", "Komunikat", "width=200px,height=200px");
-                OknoKomunikatu.document.write("Dane zmieniły się na :" +
-                    "<button onclick='window.opener.postMessage(false, '*')'>Tak</button> " +
-                    "<button onclick='window.opener.postMessage(true, '*')'>Nie</button>");
-
-                window.onmessage = function (e) {
-                    if (! e.data) {
-                        saveRow(id_gmin);
-                    } else {
-                        $('#miesz_' + id_gmin).val(dane.miesz);
-                        $('#upraw_' + id_gmin).val(dane.upraw);
-                        $('#wydan_' + id_gmin).val(dane.wydan);
-                        $('#oddan_' + id_gmin).val(dane.oddan);
-                        $('#naPi_' + id_gmin).val(dane.naPi);
-                        $('#naDr_' + id_gmin).val(dane.naDr);
-                        $('#naPP_' + id_gmin).first().text(dane.naPP + "%");
-                        $('#naPa_' + id_gmin).width(dane.naPP + "%");
-                        $('#naDP_' + id_gmin).first().text(dane.naDP + "%");
-                    }
-                }
-
+                console.log(dane.komunikat);
+                $('#komunikat').html(dane.komunikat);
             }
 
         },
     });
     
+}
+
+function upDate(id_gmin, now_mirsz, now_upraw, now_wydan, now_oddan, now_pierw, now_pi_pr, now_drugi, now_dr_pr) {
+    $('#miesz_' + id_gmin).val(now_mirsz);
+    $('#upraw_' + id_gmin).val(now_upraw);
+    $('#wydan_' + id_gmin).val(now_wydan);
+    $('#oddan_' + id_gmin).val(now_oddan);
+    $('#naPi_' + id_gmin).val(now_pierw);
+    $('#naDr_' + id_gmin).val(now_drugi);
+    $('#naPP_' + id_gmin).first().text(now_pi_pr + "%");
+    $('#naPa_' + id_gmin).width(now_pi_pr + "%");
+    $('#naDP_' + id_gmin).first().text(now_dr_pr + "%");
+    $('#komunikat').text("");
+}
+
+function upDateMy(id_gmin) {
+    $('#komunikat').text("");
+    $('#butt_' +id_gmin).click();
 }

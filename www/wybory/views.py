@@ -232,7 +232,7 @@ def load_gmin(request ) :
 
 def save_data(request):
     if request.method == 'GET':
-        gmina = Gmina.objects.all().filter(id = request.GET.get('id'))
+        gmina = Gmina.objects.all().filter(id = request.GET.get('id'))[0]
         na_pierwszego = int(request.GET.get('na_pierwszego'))
         na_drugiego = int(request.GET.get('na_drugiego'))
         odanych = int(request.GET.get("odanych"))
@@ -241,7 +241,8 @@ def save_data(request):
         mieszkancow = int(request.GET.get("mieszkancow"))
         date_str = request.GET.get("date")
 
-        sukces = True;
+        sukces = True
+        komunikat = ''
         raport = Rapor.objects.all().filter(gmina=gmina)[0]
         try:
             date = datetime.datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S.%f') - datetime.timedelta(hours=2)
@@ -259,6 +260,62 @@ def save_data(request):
         else:
             print ( "<")
             sukces = False;
+
+            context = {
+                'datazmiany': raport.data_modyfikacji.astimezone(datetime.timezone.utc).replace(tzinfo=None),
+                'zmieniajacy': '',
+                'kand_pierw': str(Kandydat.objects.all()[0]),
+                'kand_drugi': str(Kandydat.objects.all()[1]),
+                'str_mirsz': mieszkancow,
+                'str_upraw': uprawnionych,
+                'str_wydan': wydanych,
+                'str_oddan': odanych,
+                'str_pierw': na_pierwszego,
+                'str_pi_pr': '',
+                'str_dr_pr': '',
+                'str_drugi': na_drugiego,
+                'now_mirsz': raport.liczba_mieszkańców,
+                'now_upraw': raport.liczba_uprawnionych,
+                'now_wydan': raport.liczba_wydanych_kart,
+                'now_oddan': raport.liczba_głosów_oddanych,
+                'now_pierw': raport.liczba_głosów_na_pierwszego_kandydata,
+                'now_pi_pr': '',
+                'now_dr_pr': '',
+                'now_drugi': raport.liczba_głosów_na_drugiego_kandydata,
+            }
+            komunikat = "<h4>Dane zostały zmienione o " + str(raport.data_modyfikacji.astimezone(datetime.timezone.utc).replace(tzinfo=None)) +\
+                        " </h4> <h5>" + str(gmina) + "</h5><div class=\"tabela\"><div><div>wersja</div><div>Liczba mieszkańców</div><div>Liczba uprawinionych</div><div>Liczba wydanych kart</div><div>Liczba oddanych</div><div>"+  str(Kandydat.objects.all()[0]) +"""</div><div></div><div>Proporcje</div><div></div><div>"""+ str(Kandydat.objects.all()[1])+ """</div><div> </div></div > <div > <div > moja </div ><div > """+str(mieszkancow)+""" </div > <div > """+str(uprawnionych)+""" </div ><div > """+str(wydanych)+""" </div ><div > """+str(odanych)+""" </div ><div > """+str(na_pierwszego)+""" </div ><div >"""+\
+                 procent(na_pierwszego, na_drugiego+na_pierwszego) +"% </div><div><div class =\"mapbar2\" ><img src = \"/static/wybory/pasekA.png\"  width = \""+procent(na_pierwszego, na_drugiego+na_pierwszego)+"%\"class =\"bark1\" ></div ></div> <div> "+procent(na_drugiego, na_drugiego+na_pierwszego)+"%</div>" +\
+                "<div> "+str(na_drugiego)+" </div><div><button onclick = \"upDateMy("+ str(gmina.id) + ") " +\
+                """">Nadpisz mojmi.</button>
+                        </div>
+                    </div>
+                    <div>
+                        <div>Nowsze dane</div>
+                        <div>"""+str(raport.liczba_mieszkańców)+"""</div>
+                        <div>"""+str(raport.liczba_uprawnionych)+"""</div>
+                        <div>"""+str(raport.liczba_wydanych_kart)+"""</div>
+                        <div>"""+str(raport.liczba_głosów_oddanych)+"""</div>
+                        <div>"""+str(raport.liczba_głosów_na_pierwszego_kandydata)+"""</div>
+                        <div>"""+procent(raport.liczba_głosów_na_pierwszego_kandydata, raport.liczba_głosów_na_pierwszego_kandydata + raport.liczba_głosów_na_drugiego_kandydata)+"""%</div>
+                        <div>
+                            <div class="mapbar2">
+                                <img src="/static/wybory/pasekA.png" width="""+procent(raport.liczba_głosów_na_pierwszego_kandydata, raport.liczba_głosów_na_pierwszego_kandydata + raport.liczba_głosów_na_drugiego_kandydata)+"""% class="bark1">
+                            </div>
+                        </div>
+                        <div>"""+procent(raport.liczba_głosów_na_drugiego_kandydata, raport.liczba_głosów_na_pierwszego_kandydata + raport.liczba_głosów_na_drugiego_kandydata)+"""%</div>
+                        <div>"""+str(raport.liczba_głosów_na_drugiego_kandydata)+"""</div>
+                        <div>
+                             <button onclick="upDate("""+str(gmina.id)+""", """+str(raport.liczba_mieszkańców)+""", """+str(raport.liczba_uprawnionych)+""", """+str(raport.liczba_wydanych_kart)+""", """+str(raport.liczba_głosów_oddanych)+""", """+str(raport.liczba_głosów_na_pierwszego_kandydata)+""", """+procent(raport.liczba_głosów_na_pierwszego_kandydata, raport.liczba_głosów_na_drugiego_kandydata + raport.liczba_głosów_na_pierwszego_kandydata)+""", """+str(raport.liczba_głosów_na_drugiego_kandydata)+""", """+procent(raport.liczba_głosów_na_drugiego_kandydata, raport.liczba_głosów_na_drugiego_kandydata + raport.liczba_głosów_na_pierwszego_kandydata)+""")">Zakceptuj te dane.</button>
+                         </div>
+                    </div>
+                </div>
+            """
+
+
+
+
+
         out = {
             'sukces' : sukces,
             'wazn' : na_pierwszego + na_drugiego,
@@ -271,8 +328,10 @@ def save_data(request):
             'oddan': raport.liczba_głosów_oddanych,
             'miesz': raport.liczba_mieszkańców,
             'naPi' : raport.liczba_głosów_na_pierwszego_kandydata,
-            'naDr' : raport.liczba_głosów_na_drugiego_kandydata
+            'naDr' : raport.liczba_głosów_na_drugiego_kandydata,
+            'komunikat' : komunikat,
+
         }
 
-        return HttpResponse(json.dumps(out))
+        return HttpResponse({json.dumps(out)})
     return HttpResponseRedirect("/")
